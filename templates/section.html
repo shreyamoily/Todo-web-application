@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add a Task</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+    <!-- <link rel="stylesheet" href="Stylesheet.css"> -->
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/Stylesheet.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover; 
+    }
+  </style>
+</head>
+<body>
+  <div class="sectionpage">
+  <nav class="navbar fixed-top navbar-expand lg navbar-dark p-md-3">
+    <div class="container">
+        <a href="/home/{{dt}}" class="navbar-brand">ToDo</a>
+        <button
+        type="button"
+        class="navbar-toggler"
+        data-bs-target="#navbarNav"
+        data-bs-toggle="collapse"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-lable="Toggle Navbar"
+        >
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="mx-auto">   
+            </div>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="/" class="nav-link text white">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+  <br><br><br>
+  <div>
+    <h1 style="color: white; font-weight: 400; margin-left: 20px;">Tasks for {{dt}}</h1>
+  </div>
+
+  <br>
+  <table class="table table-hover">
+    {% if todolist|length == 0 %}
+    <div class="alert alert-dark" role="alert">
+      No Tasks found. Add your first Task.
+    </div>
+    {% else %}
+    {% for task in todolist %}
+    <tr>
+      <td style="width:5%">
+        <form action="/comp/{{task.sno}}/{{dt}}" method="GET">
+          <div class="form-check">
+            <input class="form-check-input" style="margin-left: 5px;" type="checkbox" name="completed" id="flexCheckDefault"
+              onChange="this.form.submit()">
+            <label class="form-check-label" for="flexCheckDefault">
+            </label>
+          </div>
+        </form>
+      </td>
+      <td style="color: white; margin-left: 20px;" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{task.title}}">{{loop.index}}</td>
+      <td  style="color: white; margin-left: 20px;" data-bs-toggle="modal" data-bs-target="#staticBackdrop{{task.title}}">{{task.title}}</td>
+    </tr>
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop{{task.title}}" data-bs-backdrop="static" data-bs-keyboard="false"
+      tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title"id="staticBackdropLabel">{{task.title}}</h5>
+
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            {{task.desc}}<br>
+            <h6>Due: {{task.due_date}}</h6>
+          </div>
+          <div class="modal-footer">
+            <!-- Edit button -->
+            <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal"
+              data-bs-target="#exampleModal{{task.sno}}" data-bs-whatever="@mdo"><svg xmlns="http://www.w3.org/2000/svg"
+                width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                <path
+                  d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+              </svg></button>
+            <!-- Delete button -->
+            <button type="button" class="btn btn-outline-dark"
+              onclick="window.location.href='/remove/{{task.sno}}/{{dt}}'"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                <path
+                  d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                <path fill-rule="evenodd"
+                  d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+              </svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Edit Modal -->
+    <div class="modal fade" id="exampleModal{{task.sno}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form action="/edit/{{task.sno}}/{{dt}}" method="POST">
+              <div class="mb-3 ">
+                <label for="recipient-name" class="col-form-label">Name:</label>
+                <input type="text" class="form-control" name="title" value={{task.title}}>
+              </div>
+              <div class="mb-3">
+                <label for="message-text" class="col-form-label">Description:</label>
+                <textarea class="form-control" name="desc">{{task.desc}}</textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-dark">Save</button>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+  </table>
+
+  <!-- ADD Button-->
+  <!-- <button type="button" class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#exampleModal"
+    data-bs-whatever="@mdo"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+      class="bi bi-plus-lg" viewBox="0 0 16 16">
+      <path fill-rule="evenodd"
+        d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" />
+    </svg></button> -->
+    <div class="addtask">
+    <button type="button" class="btn btn-outline-light btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal"
+    data-bs-whatever="@mdo">Add a Task
+      <path fill-rule="evenodd"
+        d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z" /></button>
+      </div>
+  <!-- Add Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Task</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/home/{{sect}}/{{dt}}" method="POST">
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Name:</label>
+              <input type="text" class="form-control" id="recipient-name" name="title">
+            </div>
+            <div class="mb-3">
+              <label for="message-text" class="col-form-label">Description:</label>
+              <textarea class="form-control" id="message-text" name="desc"></textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-dark">Save</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
