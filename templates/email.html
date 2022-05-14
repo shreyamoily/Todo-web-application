@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Tasks for today</h1>
+    <ul>
+    {% for task in tasks %}
+        <li><b>{{task.title}}</b></li>
+        <p>Section: {{task.sect}}</p>
+        <p>{{task.desc}}</p>
+    
+    {% endfor %}
+    </ul>
+    
+</body>
+</html>
